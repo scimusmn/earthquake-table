@@ -25,6 +25,9 @@ protected:
 	bool bIsRunning;
 	bool bWasRunning;
 
+	bool bHoming;
+	bool bHomed;
+
 	tableTraj * tRunning;
 public:
 	motionTable();
@@ -38,6 +41,8 @@ public:
 	void handleError(const Error *err, string str);
 	void clearFaults();
 	bool home();
+	bool isHoming(){return bHoming;}
+	bool isHome(){return bHomed;}
 
 	void setup();
 	void update();

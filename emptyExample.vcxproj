@@ -152,9 +152,10 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\..\..\..\Copley CML\CML\c\Utils.cpp" />
     <ClCompile Include="..\..\..\addons\ofxDirList\src\ofxDirList.cpp" />
     <ClCompile Include="src\accParse\accParse.cpp" />
+    <ClCompile Include="src\interface\interfaceObjects.cpp" />
+    <ClCompile Include="src\interface\tableInterface.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\shakeTable\shakeTable.cpp" />
-    <ClCompile Include="src\shakeTable\tableInterface.cpp" />
     <ClCompile Include="src\shakeTrajectory\shakeTrajectory.cpp" />
     <ClCompile Include="src\sinTrajectory\sinTrajectory.cpp" />
     <ClCompile Include="src\testApp.cpp" />
@@ -196,6 +197,8 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="src\inc\CML_Trajectory.h" />
     <ClInclude Include="src\inc\CML_TrjScurve.h" />
     <ClInclude Include="src\inc\CML_Utils.h" />
+    <ClInclude Include="src\interface\interfaceObjects.h" />
+    <ClInclude Include="src\interface\tableInterface.h" />
     <ClInclude Include="src\kvaser\INC\canevt.h" />
     <ClInclude Include="src\kvaser\INC\canlib.h" />
     <ClInclude Include="src\kvaser\INC\canstat.h" />
@@ -209,7 +212,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="src\kvaser\INC\sing.h" />
     <ClInclude Include="src\kvaser\INC\std.h" />
     <ClInclude Include="src\shakeTable\shakeTable.h" />
-    <ClInclude Include="src\shakeTable\tableInterface.h" />
     <ClInclude Include="src\shakeTrajectory\shakeTrajectory.h" />
     <ClInclude Include="src\sinTrajectory\sinTrajectory.h" />
     <ClInclude Include="src\tableTrajectory.h" />

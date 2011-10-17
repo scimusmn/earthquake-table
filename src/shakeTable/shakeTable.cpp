@@ -9,15 +9,18 @@ motionTable::motionTable()
 	tRunning=0;
 	bIsRunning=false;
 
-	homeCurrent=350;
+	homeCurrent=300;
 	hcfg.method  = CHM_HARDSTOP_NEG;
 	hcfg.velFast = 12000;
 	hcfg.velSlow = 12000;
 	hcfg.accel   = 10000;
-	hcfg.current = 300; // 2.0 amps, enough to stop it once both blocks are against the stops. 
+	hcfg.current = homeCurrent; // 3.0 amps, enough to stop it once both blocks are against the stops. 
 	hcfg.offset  = 30500;
 
 	amp.SetCountsPerUnit(1);
+
+	bHomed=false;
+	bHoming=false;
 }
 	
 motionTable::~motionTable()
@@ -80,24 +83,28 @@ bool motionTable::home()
 {
 	stopTable();
 	amp.Enable();
+	bHoming=true;
 	bool ret=false;
+	clearFaults();
 	err = amp.GoHome( hcfg );
 	handleError( err, "Going home" );
 
 	//ofGetAppPtr()->draw();
-	printf( "Waiting for home to finish...\n" );
-	err = amp.WaitMoveDone( 20000 ); 
-	handleError( err, "waiting on home" );
+	//printf( "Waiting for home to finish...\n" );
+	//err = amp.WaitMoveDone( 20000 ); 
+	//handleError( err, "waiting on home" );
 
 	if(amp.IsReferenced()){
 		ret=true;
 		printf("Successfully Homed\n");
 		pos=0;
+		bHoming=false;
+		bHomed=true;
 		uunit motPos=0;
 		amp.GetPositionActual(motPos);
 		cout << motPos << " is the current pos" << endl;
 	}
-	stopTable();
+	//stopTable();
 	return ret;
 }
 
@@ -122,5 +129,15 @@ void motionTable::setup()
 
 void motionTable::update()
 {
-
+	if(bHoming){
+		if(amp.IsReferenced()){
+			printf("Successfully Homed\n");
+			pos=0;
+			bHoming=false;
+			bHomed=true;
+			uunit motPos=0;
+			amp.GetPositionActual(motPos);
+			cout << motPos << " is the current pos" << endl;
+		}
+	}
 }

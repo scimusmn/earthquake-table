@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	//table.setup();
+	table.setup();
 	inter.setup(&table);
 	background.loadImage("images/background.jpg");
 }

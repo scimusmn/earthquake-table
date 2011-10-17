@@ -117,8 +117,11 @@
     <ClCompile Include="..\..\..\addons\ofxDirList\src\ofxDirList.cpp">
       <Filter>addons\ofxDirList\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\shakeTable\tableInterface.cpp">
-      <Filter>shakeTable</Filter>
+    <ClCompile Include="src\interface\tableInterface.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interface\interfaceObjects.cpp">
+      <Filter>interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,10 +279,13 @@
     <ClInclude Include="..\..\..\addons\ofxDirList\src\ofxDirList.h">
       <Filter>addons\ofxDirList\src</Filter>
     </ClInclude>
-    <ClInclude Include="src\shakeTable\tableInterface.h">
-      <Filter>shakeTable</Filter>
-    </ClInclude>
     <ClInclude Include="src\tableTrajectory.h" />
+    <ClInclude Include="src\interface\tableInterface.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interface\interfaceObjects.h">
+      <Filter>interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CML inc">
@@ -320,6 +326,9 @@
     </Filter>
     <Filter Include="addons\ofxDirList\src">
       <UniqueIdentifier>{8c07d174-fd31-498d-8b73-5729c00b921b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{33846178-8147-46ba-8827-979cd0bc594a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

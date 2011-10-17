@@ -7,7 +7,7 @@
 #include "CML.h"
 #include "can\can_kvaser.h"
 #include "shakeTable\shakeTable.h"
-#include "shakeTable\tableInterface.h"
+#include "interface\tableInterface.h"
 
 CML_NAMESPACE_USE();
 
