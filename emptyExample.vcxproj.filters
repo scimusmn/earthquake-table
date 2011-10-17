@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\testApp.cpp" />
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Amp.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpFile.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpFW.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpParam.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpPDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpPVT.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpStruct.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpUnits.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpVersion.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Can.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CanOpen.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CML.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyIO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyIOFile.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyNode.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Error.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\EventMap.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\File.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Filter.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Firmware.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Geometry.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\IOmodule.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Linkage.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\LSS.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Node.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Path.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\PDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\SDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Threads.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\TrjScurve.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Utils.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\can\can_kvaser.cpp">
+      <Filter>CML cpp\can</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Copley CML\CML\c\threads\Threads_w32.cpp">
+      <Filter>CML cpp\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sinTrajectory\sinTrajectory.cpp">
+      <Filter>sinTrajectory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\accParse\accParse.cpp">
+      <Filter>accParse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shakeTrajectory\shakeTrajectory.cpp">
+      <Filter>shakeTraj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shakeTable\shakeTable.cpp">
+      <Filter>shakeTable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxDirList\src\ofxDirList.cpp">
+      <Filter>addons\ofxDirList\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shakeTable\tableInterface.cpp">
+      <Filter>shakeTable</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\testApp.h" />
+    <ClInclude Include="src\inc\can\can_copley.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_vector.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_ixxat.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_ixxat_v3.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_kvaser.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_ni.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\can_tms320f28xx.h">
+      <Filter>CML inc\can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\can\copley_internal.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Amp.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_AmpDef.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_AmpStruct.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Can.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_CanOpen.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Copley.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_CopleyIO.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Error.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_ErrorCodes.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_EventMap.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_File.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Filter.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Firmware.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Geometry.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_IO.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Linkage.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Node.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Path.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_PDO.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_SDO.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Settings.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Threads.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Trajectory.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_TrjScurve.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inc\CML_Utils.h">
+      <Filter>CML inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\canevt.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\canlib.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\canstat.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\extras\poppack.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\extras\pshpack1.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\j1587lib.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\kvaDbLib.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\linlib.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\obsolete.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\predef.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\sing.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kvaser\INC\std.h">
+      <Filter>kvaser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sinTrajectory\sinTrajectory.h">
+      <Filter>sinTrajectory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\accParse\accParse.h">
+      <Filter>accParse</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shakeTrajectory\shakeTrajectory.h">
+      <Filter>shakeTraj</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shakeTable\shakeTable.h">
+      <Filter>shakeTable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxDirList\src\ofxDirList.h">
+      <Filter>addons\ofxDirList\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shakeTable\tableInterface.h">
+      <Filter>shakeTable</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tableTrajectory.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CML inc">
+      <UniqueIdentifier>{a0f92dc6-5692-41ca-a63c-0d334673e37e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CML inc\can">
+      <UniqueIdentifier>{4de8df5f-97f9-4051-8d08-e4a24514afce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CML cpp">
+      <UniqueIdentifier>{f03f331f-9856-4711-b558-ce611cb40bb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CML cpp\can">
+      <UniqueIdentifier>{3d0371de-406e-4e79-b268-5c2d9491dad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CML cpp\threads">
+      <UniqueIdentifier>{6099f0f8-2fac-4bb1-b4f2-a06c001cb86f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kvaser">
+      <UniqueIdentifier>{2b757aab-39f4-438b-a687-a6bc2333d857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sinTrajectory">
+      <UniqueIdentifier>{011a8ee0-a528-42c0-b3c0-b7bb1fc8307d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="accParse">
+      <UniqueIdentifier>{ed3db231-ab67-49f4-aa99-7db5bb823f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shakeTraj">
+      <UniqueIdentifier>{eb2289de-fda2-4b95-a457-67c5a2e06349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shakeTable">
+      <UniqueIdentifier>{5543205c-d04d-4f4d-ac3a-57687283731a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{af31f2a7-14d8-4645-b08d-007b3549deea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDirList">
+      <UniqueIdentifier>{4e9392ca-a17e-4b59-9160-b41513ed3a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDirList\src">
+      <UniqueIdentifier>{8c07d174-fd31-498d-8b73-5729c00b921b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

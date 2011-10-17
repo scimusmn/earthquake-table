@@ -1,0 +1,5 @@
+bin/*.*
+bin/data/temp/*
+*CML*
+ipch/*
+obj/*
