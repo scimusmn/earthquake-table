@@ -1,5 +1,10 @@
 #include "shakeTrajectory.h"
 
+extern ofColor yellow;
+extern ofColor red;
+extern ofColor blue;
+extern ofColor gray;
+
 shakeTraj::shakeTraj(){
 	label.loadFont("fonts/Arial.ttf");
 	bRunning=false;
@@ -19,7 +24,7 @@ const Error * shakeTraj::NextSegment(uunit & pos, uunit & vel, uint8 & time){
 	return 0;
 }
 
-void shakeTraj::draw(int x, int y, double w, double h)
+void shakeTraj::draw(int x, int y, int w, int h)
 {
 	ofSetColor(255,255,255);
 	ofRect(x,y,w,h);
@@ -41,6 +46,34 @@ void shakeTraj::draw(int x, int y, double w, double h)
 	ofSetLineWidth(3);
 	ofLine((w/double(data.size()))*data.index+x,y,(w/double(data.size()))*data.index+x,y+h);
 	ofSetLineWidth(1);
+}
+
+void shakeTraj::auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl)
+{
+	ofSetColor(yellow);
+	double factor=double(h)/lbl.stringWidth("AMPLITUDE");
+	double stringW=factor*lbl.stringHeight("AMPLITUDE");
+	ofPushMatrix();
+	ofTranslate(x-stringW,y+h);
+	ofScale(factor,factor);
+	ofRotate(-90);
+	lbl.drawString("AMPLITUDE",0,0);
+	ofPopMatrix();
+	/*string perc=ofToString(int(amplPercent*100))+"%";
+	factor=double(w-stringW-20)/lbl.stringWidth(perc);
+	lbl.setMode(OF_FONT_BOT);
+	ofPushMatrix();
+	int ampPos=(1-amplPercent*(.8)/(freq*1.6))*h*.5;
+	ofTranslate(x+stringW,y+ampPos-5);
+	ofScale(factor,factor);
+	lbl.drawString(perc,0,0);
+	ofPopMatrix();
+	ofSetColor(blue);
+	ofSetLineWidth(2.);
+	ofLine(x+stringW,y+ampPos,x+w-3,y+ampPos);
+	ofLine(x+stringW,y+h-ampPos,x+w-3,y+h-ampPos);
+	ofSetLineWidth(2.);
+	lbl.setMode(OF_FONT_TOP);*/
 }
 
 const Error * shakeTraj::StartNew(){

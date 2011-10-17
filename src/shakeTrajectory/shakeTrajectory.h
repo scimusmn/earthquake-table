@@ -23,7 +23,8 @@ public:
 	const Error * NextSegment(uunit & pos, uunit & vel, uint8 & time);
 	const Error * StartNew();
 	void setup(string filename);
-	void draw(int x, int y,double w=500,double h=200);
+	void draw(int x, int y,int w=500,int h=200);
+	void auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl);
 	void updateMaxNet(double newMax);
 
 	double duration();

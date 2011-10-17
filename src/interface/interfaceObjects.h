@@ -31,14 +31,34 @@ class shakeButs : public ofInterGroup {
 	vector<shakeTraj> * shakes;
 	vector<shakeButton> buttons;
 	int lastPress;
+	double nameWid,dateWid,durWid;
 public:
 	shakeButton & operator[](int i);
 	int size();
 	shakeButton & lastPressed();
 	void setup(vector<shakeTraj> * trajs);
-	void draw(int _x, int _y);
+	void draw(int _x, int _y, int _w, int _h);
 	bool clickDown(int _x, int _y);
 	bool clickUp();
+};
+
+struct slidePack {
+	ofButton up;
+	ofButton dn;
+	ofSlider sld;
+	digitDisplay disp;
+	void setup(int touchRad=40){
+		sld.setup(touchRad,touchRad,0);
+		disp.setup(150,4);
+		up.setup(touchRad,touchRad,"images/plus.png");
+		dn.setup(touchRad,touchRad,"images/minus.png");
+	}
+	bool clickUp(){
+		up.clickUp();
+		dn.clickUp();
+		sld.clickUp();
+		return false;
+	}
 };
 
 //button for stopping the table

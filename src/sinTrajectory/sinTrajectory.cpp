@@ -2,6 +2,11 @@
 
 //-- Init the starting variables for the sin Trajectory
 
+extern ofColor yellow;
+extern ofColor red;
+extern ofColor blue;
+extern ofColor gray;
+
 sinTraj::sinTraj(){
 	index=tickPos=dTime=totTime=startTime=freq=pFreq=ampl=aug=0;
 	bRunning=false;
@@ -66,12 +71,15 @@ void sinTraj::draw(int _x, int _y, int _w, int _h)
 {
 	x=_x,y=_y;
 	w=_w,h=_h;
+	ofSetLineWidth(1.0);
+	int fullAmp=h*(.8)/(freq*1.6);
 	ofSetColor(109,202,208);
 	for(int i=0; i<numDivs; i++){
 		ofLine(tickPos+i*w/seconds+x,y,tickPos+i*w/seconds+x,y+h);
 	}
-	for(int i=1; i<4;i++){
-		ofLine(x,y+i*h/4,x+w,y+i*h/4);
+	int ampPos=(1-(.8)/(freq*1.6))*h*.5;
+	for(int i=0; i<5;i++){
+		if((i>0&&i<4)||ampPos) ofLine(x,y+ampPos+i*fullAmp/4,x+w,y+ampPos+i*fullAmp/4);
 	}
 	ofSetColor(0,0,0);
 	//ofSetLineWidth(2.0);
@@ -84,6 +92,34 @@ void sinTraj::draw(int _x, int _y, int _w, int _h)
 	}
 	
 	//ofSetLineWidth(1);
+}
+
+void sinTraj::auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl)
+{
+	ofSetColor(yellow);
+	double factor=double(h)/lbl.stringWidth("AMPLITUDE");
+	double stringW=factor*lbl.stringHeight("AMPLITUDE");
+	ofPushMatrix();
+	ofTranslate(x-stringW,y+h);
+	ofScale(factor,factor);
+	ofRotate(-90);
+	lbl.drawString("AMPLITUDE",0,0);
+	ofPopMatrix();
+	string perc=ofToString(int(amplPercent*100))+"%";
+	factor=double(w-stringW-20)/lbl.stringWidth(perc);
+	lbl.setMode(OF_FONT_BOT);
+	ofPushMatrix();
+	int ampPos=(1-amplPercent*(.8)/(freq*1.6))*h*.5;
+	ofTranslate(x+stringW,y+ampPos-5);
+	ofScale(factor,factor);
+	lbl.drawString(perc,0,0);
+	ofPopMatrix();
+	ofSetColor(blue);
+	ofSetLineWidth(2.);
+	ofLine(x+stringW,y+ampPos,x+w-3,y+ampPos);
+	ofLine(x+stringW,y+h-ampPos,x+w-3,y+h-ampPos);
+	ofSetLineWidth(2.);
+	lbl.setMode(OF_FONT_TOP);
 }
 
 // Define the function which is called by the table when the trajectory is started.

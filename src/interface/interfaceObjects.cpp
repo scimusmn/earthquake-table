@@ -3,7 +3,15 @@
 
 // setup the button for an earthquake. sets the width to the width of the location, date and magnitude strings *2.
 
-double wM=1.7;
+double wM=1.65;
+
+ofColor white(255,255,255);
+ofColor black(0,0,0);
+ofColor gray(0x333333);
+ofColor yellow(229,225,15);
+ofColor blue(109,202,208);
+ofColor orange(251,176,23);
+ofColor red(209,35,42);
 
 void shakeButton::setup(shakeTraj * shk)
 {
@@ -27,25 +35,21 @@ void shakeButton::draw(int _x, int _y)
 {
 	x=_x, y=_y;
 	ofColor k=ofGetStyle().color;
-	double a=k.a/255.;
-	ofSetColor(251,176,23,128*a);
+	double a=1;
+	ofSetColor(orange.opacity(.55*a));
 	if(shake->isRunning()){
-		//ofSetColor(k-.2*255);
-		ofSetColor(209,35,42,196*a);
+		ofSetColor(red.opacity(.75*a));
 	}
 	ofRect(x,y,w,h);
-	ofSetColor(255,255,255,k.a);
+	ofSetColor(white.opacity(a));
 	ofNoFill();
 	ofRect(x,y,w,h);
 	ofFill();
-	k=ofGetStyle().color;
-	ofSetColor(k+.2*255);
 	//for(int i=1; i<3; i++){
 	ofRect(x+nameWid*(wM*.7),y,2,h);
 	ofRect(x+(nameWid+dateWid)*(wM*.7),y,2,h);
 	ofRect(x+(nameWid+dateWid+durWid)*wM*.85,y,2,h);
 	//}
-	ofSetColor(255,255,255,k.a);
 	arial.drawString(shake->location,x+10,y+5);
 	arial.drawString(shake->date,x+nameWid*(wM*.7)+10,y+5);
 	arial.drawString(dur,x+(nameWid+dateWid)*(wM*.7)+10,y+5);
@@ -76,7 +80,7 @@ void sinButton::draw(int _x, int _y)
 	if(sine&&sine->isRunning()) title="Stop oscillations", ofSetColor(k-.2*255);
 	else title="Start oscillations";
 	ofRoundShape(x,y,w,h,h/4,true);
-	ofSetColor(255*.2,255*.2,255*.2,k.a);
+	ofSetColor(gray.opacity(k.a/255.));
 	arial.drawString(title,x+10,y+5);
 }
 
@@ -99,35 +103,63 @@ int shakeButs::size()
 void shakeButs::setup(vector<shakeTraj> * trajs)
 {
 	shakes=trajs;
-	double wid=0,nW=0,dW=0,durW;
+	w=0,nameWid=0,dateWid=0,durWid;
 	for(unsigned int i=0; i<shakes->size(); i++){
 		buttons.push_back(shakeButton());
 		buttons[i].setup(&shakes->at(i));
-		wid=max(wid,buttons[i].w);
-		nW=max(nW,buttons[i].nameWid);
-		dW=max(dW,buttons[i].dateWid);
-		durW=max(durW,buttons[i].durWid);
+		w=max(w,buttons[i].w);
+		nameWid=max(nameWid,buttons[i].nameWid);
+		dateWid=max(dateWid,buttons[i].dateWid);
+		durWid=max(durWid,buttons[i].durWid);
 	}
 	for (unsigned int i=0; i<buttons.size(); i++){
-		buttons[i].w=wid;
-		buttons[i].nameWid=nW;
-		buttons[i].dateWid=dW;
-		buttons[i].durWid=durW;
+		buttons[i].w=w;
+		buttons[i].nameWid=nameWid;
+		buttons[i].dateWid=dateWid;
+		buttons[i].durWid=durWid;
 	}
-	w=wid;
 }
 
 // draw all of the buttons
 	
-void shakeButs::draw(int _x, int _y)
+void shakeButs::draw(int _x, int _y, int _w, int _h)
 {
+	x=_x;
+	y=_y;
 	int totH=0;
-	ofColor k=ofGetStyle().color;
+	ofFont * lbl;
+	if(buttons.size()){
+		lbl = &buttons[0].arial;
+	}
+
+	//-_-_-_-_-_-_-_-_ Draw black backing -_-_-_-_-_-_-_-_
+	ofSetColor(black.opacity(.5));
+	ofRect(x-20,y,w+20,h+60);
+
+	//-_-_-_-_-_-_-_-_ draw divs -_-_-_-_-_-_-_-_
+	ofSetColor(white.opacity(.85));
+	ofRect(x+nameWid*(wM*.7),y,2,h);
+	ofRect(x+(nameWid+dateWid)*(wM*.7),y,2,h);
+	ofRect(x+(nameWid+dateWid+durWid)*wM*.85,y,2,h);
+
+	//-_-_-_-_-_-_-_-_ draw labels for quakes -_-_-_-_-_-_-_-_
+	lbl->drawString("Location",x+10,y+5);
+	lbl->drawString("Date",x+nameWid*(wM*.7)+10,y+5);
+	lbl->drawString("Duration",x+(nameWid+dateWid)*(wM*.7)+10,y+5);
+	lbl->drawString("Magnitude",x+(nameWid+dateWid+durWid)*wM*.85+10,y+5);
 	for(unsigned int i=0; i<buttons.size(); i++){
-		ofSetColor(64,128,200,k.a);
-		buttons[i].draw(_x,_y+totH);
+		buttons[i].draw(x,y+50+totH);
 		totH+=buttons[i].h+10;
 	}
+
+	//-_-_-_-_-_-_-_-_ Draw black border -_-_-_-_-_-_-_-_
+	ofSetColor(black);
+	ofPushStyle();
+	ofNoFill();
+	ofSetLineWidth(2.0);
+	ofRect(x-20,y,w+20,h+60);
+	ofPopStyle();
+
 	h=totH;
 }
 
@@ -175,7 +207,7 @@ void eqButton::draw(int _x, int _y)
 	if(bPressed) ofSetColor(k-.2*255);
 	//ofRect(x,y,w,h);
 	ofRoundShape(x,y,w,h,h/4,true);
-	ofSetColor(255*.2,255*.2,255*.2);
+	ofSetColor(gray.opacity(k.a/255.));
 	ofRoundShape(x,y,w,h,h/4,false);
 	arial.drawString(title,x+10,y+5);
 }

@@ -28,7 +28,11 @@ protected:
 	bool bHoming;
 	bool bHomed;
 
+	uunit currentPosition;
+	tableTraj * trajToHandle;
+
 	tableTraj * tRunning;
+	sinTraj blank;
 public:
 	motionTable();
 	~motionTable();
@@ -43,6 +47,8 @@ public:
 	bool home();
 	bool isHoming(){return bHoming;}
 	bool isHome(){return bHomed;}
+
+	tableTraj & runningTrajectory();
 
 	void setup();
 	void update();

@@ -14,7 +14,7 @@ class instructionBox {
 	ofButton buildSel;
 	eqButton resetBut;
 public:
-	void setup();
+	void setup(string folder);
 	void draw(int x, int y, int w, int h);
 	void update();
 	bool clickDown(int x, int y);
@@ -23,50 +23,82 @@ public:
 	int getState();
 };
 
-// class to hold all of the interface objects for the table
+// class to contain all of the manual mode controls
 
-class tableInterface {
-protected:
-	ofxDirList DIR;
-	sinTraj sinWave;
-	vector<shakeTraj> shakes;
-	shakeButs buttons;
-	sinButton sine;
+class manualMode {
 	motionTable * table;
-	eqButton stop;
+	ofFont * fnt;
+	ofFont * lblFnt;
 
-	///------ manual control
+	sinTraj sinWave;
+	sinButton sine;
 
-	ofSlider slide;
-	ofSlider amp;
-
-	ofButton ampUp;
-	ofButton ampDown;
-
-	ofButton freqBUp;
-	ofButton freqBDown;
-
-	ofTimer homeTimer;
-
-	digitDisplay ampDisp;
-	digitDisplay readout;
+	slidePack amp;
+	slidePack freq;
 
 	double prevFreqPerc;
 	double prevAmpPerc;
 
+public:
 	instructionBox inst;
+	void setup(motionTable * table,ofFont * fnt1, ofFont * fnt2);
+	void draw(int x, int y, int w, int h);
+	void update();
+	bool clickDown(int x, int y);
+	bool clickUp();
+	bool drag(int x, int y);
+	void reset();
+};
+
+// class to contain all of the automated controls for the earthquakes
+
+class autoMode {
+	motionTable * table;
+	ofFont * fnt;
+	ofFont * lblFnt;
+
+	ofxDirList DIR;
+	vector<shakeTraj> shakes;
+	shakeButs buttons;
+
+	double prevFreqPerc;
+	double prevAmpPerc;
+
+public:
+	instructionBox inst;
+	void setup(motionTable * table,ofFont * fnt1, ofFont * fnt2);
+	void draw(int x, int y, int w, int h);
+	void update();
+	bool clickDown(int x, int y);
+	bool clickUp();
+	bool drag(int x, int y);
+	void reset();
+};
+
+// class to hold all of the interface objects for the table
+
+class tableInterface {
+protected:
+	motionTable * table;
+	eqButton stop;
+
+	///------ manual control
+	manualMode man;
+
+	//------- auto mode control
+	autoMode quake;
+
+	ofTimer homeTimer;
 
 	//------ mode select
 
 	eqButton qSelect;
 	eqButton oSelect;
 
-	bool resetting;
+	ofProgressSpinner homing;
 
 	ofFont label;
 	ofFont subtext;
-
-	bool bWaving,bQuaking;
 public:
 
 	tableInterface();
@@ -75,15 +107,6 @@ public:
 	void setup(motionTable * tbl);
 	void update();
 	void draw(int x, int y);
-
-	void drawGroupBox(int x, int y, int w, int h,string title, bool gray);
-
-	void drawFreq(int x, int y, int w, int h);
-	void drawQuakes(int x, int y, int w, int h);
-	void freqUp(double amt);
-	void freqDown(double amt);
-	void dTimeUp(double amt);
-	void dTimeDown(double amt);
 	bool clickDown(int x,int y);
 	bool clickUp();
 	void drag(int x, int y);

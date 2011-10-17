@@ -23,21 +23,10 @@ void testApp::draw(){
 	background.draw(ofGetWidth()/2,ofGetHeight()/2,ofGetWidth()/2,ofGetHeight()/2);
 	bool tableRunning=false;
 	inter.draw(100,100);
-	//if(!tableRunning) ofSetColor(255,255,255),ofRect(100,200,1000,200);
-	//traj.draw(200,500);
-	//table.draw(0,0);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key=='z'){
-		table.home();
-	}
-	
-	if(key=='-') inter.freqDown(.02);
-	if(key=='=') inter.freqUp(.02);
-	if(key=='+') inter.dTimeDown(1);
-	if(key=='_') inter.dTimeUp(1);
 }
 
 //--------------------------------------------------------------
@@ -62,7 +51,6 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-	testBut.clickUp();
 	inter.clickUp();
 }
 

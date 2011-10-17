@@ -67,6 +67,7 @@ public:
 	const Error * StartNew();
 	void setup(double minFrequency,double amplitude,double numSeconds);
 	void draw(int x, int y, int w=500, int h=200);
+	void auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl);
 	void update();
 	void changeDTime(int chngTme);
 	 bool UseVelocityInfo();
