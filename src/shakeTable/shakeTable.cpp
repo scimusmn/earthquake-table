@@ -1,4 +1,14 @@
 #include "shakeTable.h"
+#include "../../../dallasEng/dallasEng.h"
+#include "../eqConfig.h"
+
+extern ofColor black,white,red,yellow;
+
+static motionTable tbl;
+
+motionTable & table(){
+	return tbl;
+}
 
 motionTable::motionTable()
 {
@@ -8,15 +18,6 @@ motionTable::motionTable()
 	canNodeID = 1;
 	tRunning=0;
 	bIsRunning=false;
-
-	homeCurrent=300;
-	hcfg.method  = CHM_HARDSTOP_NEG;
-	hcfg.velFast = 12000;
-	hcfg.velSlow = 12000;
-	hcfg.accel   = 10000;
-	hcfg.current = homeCurrent; // 3.0 amps, enough to stop it once both blocks are against the stops. 
-	hcfg.offset  = 30500;
-
 	trajToHandle=0;
 
 	amp.SetCountsPerUnit(1);
@@ -105,6 +106,15 @@ bool motionTable::home()
 	
 void motionTable::setup()
 {
+	hcfg.method  = CHM_HARDSTOP_NEG;
+	hcfg.velFast = 12000;
+	hcfg.velSlow = 12000;
+	hcfg.accel   = 10000;
+	homeCurrent=cfg().homeCurrent;
+	hcfg.current = homeCurrent; // 1.0 amps, enough to stop it once both blocks are against the stops. 
+	hcfg.offset  = 30500;
+
+
 	cml.SetDebugLevel( LOG_EVERYTHING );
 
 	can.SetBaud( canBPS );
@@ -134,7 +144,6 @@ void motionTable::update()
 		if(amp.IsReferenced()){
 			uunit motPos=0;
 			amp.GetPositionActual(motPos);
-			cout << motPos << " is the current pos" << endl;
 			if(abs(motPos)<100){
 				printf("Successfully Homed\n");
 				pos=0;
@@ -149,6 +158,21 @@ void motionTable::update()
 	}
 	if(bIsRunning){
 		amp.GetPositionActual(currentPosition);
-		cout << currentPosition << endl;
+		//cout << currentPosition << endl;
+	}
+}
+
+void motionTable::drawForeground(){
+	if(isHoming()){
+		ofSetColor(black.opacity(.75));
+		ofRect(0,0,ofGetWidth(),ofGetHeight());
+		ofSetColor(white);
+		spinner.draw(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/4);
+		header().setMode(OF_FONT_CENTER);
+		header().setSize(70);
+		ofSetColor(white);
+		header().drawString("Centering table, please wait",ofGetWidth()/2,ofGetHeight()/8);
+		header().setSize(30);
+		header().setMode(OF_FONT_LEFT);
 	}
 }

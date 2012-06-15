@@ -1,87 +1,67 @@
 #include "interfaceObjects.h"
+#include "../../../dallasEng/dallasEng.h"
 
 
 // setup the button for an earthquake. sets the width to the width of the location, date and magnitude strings *2.
 
-double wM=1.65;
-
-ofColor white(255,255,255);
-ofColor black(0,0,0);
-ofColor gray(0x333333);
-ofColor yellow(229,225,15);
-ofColor blue(109,202,208);
-ofColor orange(251,176,23);
-ofColor red(209,35,42);
+extern ofColor white,black,gray,yellow,blue,orange,red;
 
 void shakeButton::setup(shakeTraj * shk)
 {
 	bAvailable=true;
 	shake=shk;
 	duration=shake->duration();
-	dur=ssprintf("%i:%i", int(duration)/60,int(duration)%60);
-	arial.loadFont("fonts/Arial.ttf");
+	dur=ssprintf("%i:%02i", int(duration)/60,int(duration)%60);
+	arial.loadFont("fonts/HelveticaCond.otf");
 	arial.setSize(20);
-	nameWid=arial.stringWidth(shake->location);
-	dateWid=arial.stringWidth(shake->date);
-	durWid=arial.stringWidth(dur);
-	w=wM*(nameWid+dateWid+durWid+arial.stringWidth(shake->magnitude));
+	cells.clear();
+	addCell(shake->location,"Location");
+	addCell(shake->date,"Date");
+	addCell(dur,"Duration");
+	addCell(shake->magnitude,"Magnitude");
+	for(unsigned int i=0; i<cells.size(); i++){
+		w+=cells[i].width;
+	}
 	h=arial.stringHeight("Kjg")+10;
 	arial.setMode(OF_FONT_TOP);
 }
 
+void shakeButton::addCell(string val, string name)
+{
+	cells.push_back(cell(max(label().stringWidth(val)+10,label().stringWidth(name)+10),val));
+}
+
 //Draw a rectangle to hold the text of the earthquake, color dependent on the state of the trajectory
 
-void shakeButton::draw(int _x, int _y)
+void shakeButton::draw(int _x, int _y, int _w)
 {
 	x=_x, y=_y;
+	if(w!=_w){
+		int incWid=(_w-w)/4;
+		w=_w;
+		for(unsigned int i=0; i<cells.size(); i++){
+			cells[i].width+=incWid;
+		}
+	}
+
 	ofColor k=ofGetStyle().color;
 	double a=1;
 	ofSetColor(orange.opacity(.55*a));
 	if(shake->isRunning()){
 		ofSetColor(red.opacity(.75*a));
 	}
-	ofRect(x,y,w,h);
+	ofRect(x,y,_w,h);
 	ofSetColor(white.opacity(a));
 	ofNoFill();
-	ofRect(x,y,w,h);
+	ofRect(x,y,_w,h);
 	ofFill();
-	//for(int i=1; i<3; i++){
-	ofRect(x+nameWid*(wM*.7),y,2,h);
-	ofRect(x+(nameWid+dateWid)*(wM*.7),y,2,h);
-	ofRect(x+(nameWid+dateWid+durWid)*wM*.85,y,2,h);
-	//}
-	arial.drawString(shake->location,x+10,y+5);
-	arial.drawString(shake->date,x+nameWid*(wM*.7)+10,y+5);
-	arial.drawString(dur,x+(nameWid+dateWid)*(wM*.7)+10,y+5);
-	arial.drawString(shake->magnitude,x+(nameWid+dateWid+durWid)*wM*.85+10,y+5);
-}
+	int pos=0;
+	for(unsigned int i=0; i<cells.size(); i++){
+		label(cells[i].val,x+pos+5,y+5);
+		pos+=cells[i].width;
+		if(i<cells.size()-1) ofRect(x+pos,y,2,h);
+	}
 
-// bind the trajectory to the button
-	
-void sinButton::setup(sinTraj * sin)
-{
-	sine=sin;
-	arial.loadFont("fonts/Arial.ttf");
-	arial.setSize(25);
-	title="start oscillations";
-	w=20+arial.stringWidth(title);
-	h=arial.stringHeight("Kjg")+10;
-	arial.setMode(OF_FONT_TOP);
-}
-
-// draw teh button, with text and color dependent on if the trajectory is running
-
-void sinButton::draw(int _x, int _y)
-{
-	x=_x, y=_y;
-	ofColor k=ofGetStyle().color;
-
-	// if the traj is bound to the button and is running change the color.
-	if(sine&&sine->isRunning()) title="Stop oscillations", ofSetColor(k-.2*255);
-	else title="Start oscillations";
-	ofRoundShape(x,y,w,h,h/4,true);
-	ofSetColor(gray.opacity(k.a/255.));
-	arial.drawString(title,x+10,y+5);
 }
 
 // return the ith member of the buttons vector
@@ -102,21 +82,30 @@ int shakeButs::size()
 
 void shakeButs::setup(vector<shakeTraj> * trajs)
 {
+	lastPress=0;
 	shakes=trajs;
 	w=0,nameWid=0,dateWid=0,durWid;
+	int lblSize= label().getSize();
+	labelSize=18;
+	label().setSize(labelSize);
+	cells.push_back(cell(0,"Location"));
+	cells.push_back(cell(0,"Date"));
+	cells.push_back(cell(0,"Duration"));
+	cells.push_back(cell(0,"Magnitude"));
 	for(unsigned int i=0; i<shakes->size(); i++){
 		buttons.push_back(shakeButton());
 		buttons[i].setup(&shakes->at(i));
 		w=max(w,buttons[i].w);
-		nameWid=max(nameWid,buttons[i].nameWid);
-		dateWid=max(dateWid,buttons[i].dateWid);
-		durWid=max(durWid,buttons[i].durWid);
+		for(unsigned int j=0; j<cells.size();j++){
+			cells[j].width=max(cells[j].width,buttons[i].cells[j].width);
+		}
 	}
+	label().setSize(lblSize);
 	for (unsigned int i=0; i<buttons.size(); i++){
 		buttons[i].w=w;
-		buttons[i].nameWid=nameWid;
-		buttons[i].dateWid=dateWid;
-		buttons[i].durWid=durWid;
+		for(unsigned int j=0; j<cells.size();j++){
+			buttons[i].cells[j].width=cells[j].width;
+		}
 	}
 }
 
@@ -127,28 +116,40 @@ void shakeButs::draw(int _x, int _y, int _w, int _h)
 	x=_x;
 	y=_y;
 	int totH=0;
-	ofFont * lbl;
-	if(buttons.size()){
-		lbl = &buttons[0].arial;
+	if(w!=_w){
+		double incWid=(_w-w)/4.;
+		w=_w;
+		for(unsigned int i=0; i<cells.size(); i++){
+			cells[i].width+=incWid;
+		}
 	}
+	ofFont * lbl=&label();
+
+	int fntSz=label().getSize();
+	label().setMode(OF_FONT_LEFT);
+	label().setMode(OF_FONT_TOP);
+
+	label().setSize(labelSize);
+	/*if(buttons.size()){
+		lbl = &buttons[0].arial;
+	}*/
 
 	//-_-_-_-_-_-_-_-_ Draw black backing -_-_-_-_-_-_-_-_
 	ofSetColor(black.opacity(.5));
-	ofRect(x-20,y,w+20,h+60);
+	ofRect(x,y,_w,h+60);
 
 	//-_-_-_-_-_-_-_-_ draw divs -_-_-_-_-_-_-_-_
 	ofSetColor(white.opacity(.85));
-	ofRect(x+nameWid*(wM*.7),y,2,h);
-	ofRect(x+(nameWid+dateWid)*(wM*.7),y,2,h);
-	ofRect(x+(nameWid+dateWid+durWid)*wM*.85,y,2,h);
+	int pos=0;
+	//int incWid=(_w-w)/4;
+	for(unsigned int i=0; i<cells.size(); i++){
+		label(cells[i].val,x+pos+5,y+5);
+		pos+=cells[i].width;
+		if(i<cells.size()-1) ofRect(x+pos,y,2,h);
+	}
 
-	//-_-_-_-_-_-_-_-_ draw labels for quakes -_-_-_-_-_-_-_-_
-	lbl->drawString("Location",x+10,y+5);
-	lbl->drawString("Date",x+nameWid*(wM*.7)+10,y+5);
-	lbl->drawString("Duration",x+(nameWid+dateWid)*(wM*.7)+10,y+5);
-	lbl->drawString("Magnitude",x+(nameWid+dateWid+durWid)*wM*.85+10,y+5);
 	for(unsigned int i=0; i<buttons.size(); i++){
-		buttons[i].draw(x,y+50+totH);
+		buttons[i].draw(x,y+50+totH,_w);
 		totH+=buttons[i].h+10;
 	}
 
@@ -157,8 +158,12 @@ void shakeButs::draw(int _x, int _y, int _w, int _h)
 	ofPushStyle();
 	ofNoFill();
 	ofSetLineWidth(2.0);
-	ofRect(x-20,y,w+20,h+60);
+	ofRect(x,y,_w,h+60);
 	ofPopStyle();
+
+	label().setSize(fntSz);
+	label().setMode(OF_FONT_CENTER);
+	label().setMode(OF_FONT_MID);
 
 	h=totH;
 }
@@ -206,8 +211,10 @@ void eqButton::draw(int _x, int _y)
 	ofColor k=ofGetStyle().color;
 	if(bPressed) ofSetColor(k-.2*255);
 	//ofRect(x,y,w,h);
-	ofRoundShape(x,y,w,h,h/4,true);
+	ofRoundedRect(x,y,w,h,h/4);
 	ofSetColor(gray.opacity(k.a/255.));
-	ofRoundShape(x,y,w,h,h/4,false);
+	ofNoFill();
+	ofRoundedRect(x,y,w,h,h/4);
+	ofFill();
 	arial.drawString(title,x+10,y+5);
 }

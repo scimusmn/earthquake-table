@@ -3,17 +3,25 @@
 #include "ofMain.h"
 #include "ofExtended.h"
 #include "../shakeTable/shakeTable.h"
+#include "../../../dallasEng/dallasEng.h"
 #include "interfaceObjects.h"
 
 //class to interface with the earthquake trajectories
 
+enum tableMode {
+	TABLE_SELECT, TABLE_OSC, TABLE_QUAKE
+};
+
 class instructionBox {
-	ofImage rodInst;
-	ofImage buildInst;
+	ofImage o_rodInst;
+	ofImage o_buildInst;
+	ofImage q_rodInst;
+	ofImage q_buildInst;
 	ofButton rodSel;
 	ofButton buildSel;
-	eqButton resetBut;
+	dallasButton resetBut;
 public:
+	tableMode mode;
 	void setup(string folder);
 	void draw(int x, int y, int w, int h);
 	void update();
@@ -26,22 +34,21 @@ public:
 // class to contain all of the manual mode controls
 
 class manualMode {
-	motionTable * table;
-	ofFont * fnt;
-	ofFont * lblFnt;
 
 	sinTraj sinWave;
-	sinButton sine;
+	dallasButton start;
 
 	slidePack amp;
 	slidePack freq;
+
+	int slideWidth;
 
 	double prevFreqPerc;
 	double prevAmpPerc;
 
 public:
-	instructionBox inst;
-	void setup(motionTable * table,ofFont * fnt1, ofFont * fnt2);
+	//instructionBox inst;
+	void setup();
 	void draw(int x, int y, int w, int h);
 	void update();
 	bool clickDown(int x, int y);
@@ -53,20 +60,14 @@ public:
 // class to contain all of the automated controls for the earthquakes
 
 class autoMode {
-	motionTable * table;
-	ofFont * fnt;
-	ofFont * lblFnt;
 
 	ofxDirList DIR;
 	vector<shakeTraj> shakes;
-	shakeButs buttons;
-
-	double prevFreqPerc;
-	double prevAmpPerc;
 
 public:
-	instructionBox inst;
-	void setup(motionTable * table,ofFont * fnt1, ofFont * fnt2);
+	shakeButs buttons;
+	//instructionBox inst;
+	void setup();
 	void draw(int x, int y, int w, int h);
 	void update();
 	bool clickDown(int x, int y);
@@ -79,7 +80,7 @@ public:
 
 class tableInterface {
 protected:
-	motionTable * table;
+	double x,y,w,h;
 	eqButton stop;
 
 	///------ manual control
@@ -89,22 +90,18 @@ protected:
 	autoMode quake;
 
 	ofTimer homeTimer;
+	ofTimer resetTimer;
 
 	//------ mode select
 
-	eqButton qSelect;
-	eqButton oSelect;
-
-	ofProgressSpinner homing;
-
-	ofFont label;
-	ofFont subtext;
+	dallasButton qSelect;
+	dallasButton oSelect;
 public:
 
 	tableInterface();
 	~tableInterface();
 
-	void setup(motionTable * tbl);
+	void setup();
 	void update();
 	void draw(int x, int y);
 	bool clickDown(int x,int y);

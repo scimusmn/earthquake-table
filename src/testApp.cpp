@@ -1,10 +1,21 @@
 #include "testApp.h"
+#include "../../dallasEng/dallasEng.h"
+#include "eqConfig.h"
 
+extern ofColor white,black,gray;
+
+string MAIN_TITLE="See how your structure responds to motion";
 //--------------------------------------------------------------
 void testApp::setup(){
+	cfg().setup();
 
-	table.setup();
-	inter.setup(&table);
+	header().loadFont("fonts/DinC.ttf");
+	header().setSize(20);
+	header().setMode(OF_FONT_TOP);
+	ttlBar.loadFont("fonts/DinC.ttf", 35);
+	if(!cfg().noTable)
+		table().setup();
+	inter.setup();
 	background.loadImage("images/background.jpg");
 }
 
@@ -16,13 +27,13 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackground(255*.2,255*.2,255*.2);
-	ofSetColor(0xffffff);
-	background.draw(ofGetWidth()/2,ofGetHeight()/2,ofGetWidth()/2,-ofGetHeight()/2);
-	background.draw(ofGetWidth()/2,ofGetHeight()/2,-ofGetWidth()/2,-ofGetHeight()/2);
-	background.draw(ofGetWidth()/2,ofGetHeight()/2,-ofGetWidth()/2,ofGetHeight()/2);
-	background.draw(ofGetWidth()/2,ofGetHeight()/2,ofGetWidth()/2,ofGetHeight()/2);
+	ofSetColor(white*.1);
+	drawHatching(0,0,ofGetWidth(),ofGetHeight(),50,50);
 	bool tableRunning=false;
-	inter.draw(100,100);
+	inter.draw(0,ttlBar.h);
+	ttlBar.draw(MAIN_TITLE,0,0);
+
+	table().drawForeground();
 }
 
 //--------------------------------------------------------------
@@ -62,5 +73,5 @@ void testApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void testApp::exit(){
-	table.stopTable();
+	table().stopTable();
 }

@@ -1,18 +1,29 @@
 #include "ofMain.h"
 #include "ofExtended.h"
 #include "../shakeTable/shakeTable.h"
+#include "../../../dallasEng/dallasEng.h"
 
 #pragma once
+
+struct cell {
+	int width;
+	string val;
+	cell(int w, string v){
+		width=w,val=v;
+	}
+};
 
 class shakeButton : public ofButton {
 public:
 	double duration;
 	double nameWid,dateWid,magWid,durWid;
 	string dur;
+	vector<cell> cells;
 	shakeTraj * shake;
 	void setup(shakeTraj * shake);
-	void draw(int _x, int _y);
+	void draw(int _x, int _y, int _w);
 	friend class shakeButs;
+	void addCell(string val, string name);
 };
 
 //class to interface with the sin trajectories
@@ -32,6 +43,9 @@ class shakeButs : public ofInterGroup {
 	vector<shakeButton> buttons;
 	int lastPress;
 	double nameWid,dateWid,durWid;
+	int labelSize;
+
+	vector<cell> cells;
 public:
 	shakeButton & operator[](int i);
 	int size();
@@ -45,10 +59,10 @@ public:
 struct slidePack {
 	ofButton up;
 	ofButton dn;
-	ofSlider sld;
+	dallasSlider sld;
 	digitDisplay disp;
 	void setup(int touchRad=40){
-		sld.setup(touchRad,touchRad,0);
+		sld.setup(touchRad,touchRad);
 		disp.setup(150,4);
 		up.setup(touchRad,touchRad,"images/plus.png");
 		dn.setup(touchRad,touchRad,"images/minus.png");

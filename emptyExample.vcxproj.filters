@@ -3,105 +3,6 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\testApp.cpp" />
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Amp.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpFile.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpFW.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpParam.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpPDO.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpPVT.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpStruct.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpUnits.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\AmpVersion.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Can.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CanOpen.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CML.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyIO.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyIOFile.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\CopleyNode.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Error.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\EventMap.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\File.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Filter.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Firmware.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Geometry.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\IOmodule.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Linkage.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\LSS.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Node.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Path.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\PDO.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\SDO.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Threads.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\TrjScurve.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\Utils.cpp">
-      <Filter>CML cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\can\can_kvaser.cpp">
-      <Filter>CML cpp\can</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Copley CML\CML\c\threads\Threads_w32.cpp">
-      <Filter>CML cpp\threads</Filter>
-    </ClCompile>
     <ClCompile Include="src\sinTrajectory\sinTrajectory.cpp">
       <Filter>sinTrajectory</Filter>
     </ClCompile>
@@ -122,6 +23,112 @@
     </ClCompile>
     <ClCompile Include="src\interface\interfaceObjects.cpp">
       <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dallasEng\dallasEng.cpp">
+      <Filter>dallasEng</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eqConfig.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxThread\src\ofxThread.cpp">
+      <Filter>ofxThread</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Amp.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpFile.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpFW.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpParam.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpPDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpPVT.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpStruct.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpUnits.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\AmpVersion.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Can.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\CanOpen.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\CML.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\CopleyIO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\CopleyIOFile.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\CopleyNode.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Error.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\EventMap.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\File.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Filter.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Firmware.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Geometry.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\IOmodule.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Linkage.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\LSS.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Node.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Path.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\PDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\SDO.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Threads.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\TrjScurve.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\Utils.cpp">
+      <Filter>CML cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\can\can_kvaser.cpp">
+      <Filter>CML cpp\can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Copley CML\CML\c\threads\Threads_w32.cpp">
+      <Filter>CML cpp\threads</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +293,13 @@
     <ClInclude Include="src\interface\interfaceObjects.h">
       <Filter>interface</Filter>
     </ClInclude>
+    <ClInclude Include="..\dallasEng\dallasEng.h">
+      <Filter>dallasEng</Filter>
+    </ClInclude>
+    <ClInclude Include="src\eqConfig.h" />
+    <ClInclude Include="..\..\..\addons\ofxThread\src\ofxThread.h">
+      <Filter>ofxThread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CML inc">
@@ -329,6 +343,12 @@
     </Filter>
     <Filter Include="interface">
       <UniqueIdentifier>{33846178-8147-46ba-8827-979cd0bc594a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dallasEng">
+      <UniqueIdentifier>{327ea944-7c35-42af-812c-580691c623fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxThread">
+      <UniqueIdentifier>{b94ae9c0-810d-4c98-a84a-2858dc091577}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

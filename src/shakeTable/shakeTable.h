@@ -33,6 +33,8 @@ protected:
 
 	tableTraj * tRunning;
 	sinTraj blank;
+
+	ofProgressSpinner spinner;
 public:
 	motionTable();
 	~motionTable();
@@ -48,8 +50,12 @@ public:
 	bool isHoming(){return bHoming;}
 	bool isHome(){return bHomed;}
 
+	void drawForeground();
+
 	tableTraj & runningTrajectory();
 
 	void setup();
 	void update();
 };
+
+motionTable & table();

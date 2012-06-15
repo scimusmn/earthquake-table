@@ -1,4 +1,5 @@
 #include "shakeTrajectory.h"
+#include "../eqConfig.h"
 
 extern ofColor yellow;
 extern ofColor red;
@@ -28,7 +29,7 @@ void shakeTraj::draw(int x, int y, int w, int h)
 {
 	ofSetColor(255,255,255);
 	ofRect(x,y,w,h);
-	int n=data.size()/200;
+	int n=data.size()/data.sampFreq;
 	ofSetColor(109,202,208);
 	for(int i=1; i<n;i++){
 		ofLine(x+i*w/n,y,x+i*w/n,y+h);
@@ -39,8 +40,9 @@ void shakeTraj::draw(int x, int y, int w, int h)
 	}
 	ofSetColor(0,0,0);
 	ofSetLineWidth(2);
-	data.draw(x,y+h/2,w,h/2);
-	//ofDisableSmoothing();
+	if(cfg().smoothing) ofEnableSmoothing();
+	data.draw(x,y,w,h);
+	if(cfg().smoothing) ofDisableSmoothing();
 	//label.drawString(location,x,y-100);
 	ofSetColor(255,0,0);
 	ofSetLineWidth(3);
@@ -54,26 +56,11 @@ void shakeTraj::auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl)
 	double factor=double(h)/lbl.stringWidth("AMPLITUDE");
 	double stringW=factor*lbl.stringHeight("AMPLITUDE");
 	ofPushMatrix();
-	ofTranslate(x-stringW,y+h);
+	ofTranslate(x+(w-stringW)/2,y+h);
 	ofScale(factor,factor);
 	ofRotate(-90);
 	lbl.drawString("AMPLITUDE",0,0);
 	ofPopMatrix();
-	/*string perc=ofToString(int(amplPercent*100))+"%";
-	factor=double(w-stringW-20)/lbl.stringWidth(perc);
-	lbl.setMode(OF_FONT_BOT);
-	ofPushMatrix();
-	int ampPos=(1-amplPercent*(.8)/(freq*1.6))*h*.5;
-	ofTranslate(x+stringW,y+ampPos-5);
-	ofScale(factor,factor);
-	lbl.drawString(perc,0,0);
-	ofPopMatrix();
-	ofSetColor(blue);
-	ofSetLineWidth(2.);
-	ofLine(x+stringW,y+ampPos,x+w-3,y+ampPos);
-	ofLine(x+stringW,y+h-ampPos,x+w-3,y+h-ampPos);
-	ofSetLineWidth(2.);
-	lbl.setMode(OF_FONT_TOP);*/
 }
 
 const Error * shakeTraj::StartNew(){
@@ -107,10 +94,9 @@ void shakeTraj::updateMaxNet(double newMax){
 
 double shakeTraj::duration()
 {
-	cout << double(data.size())/200. <<endl;
-	return float(data.size())/200.;
+	return float(data.size())/data.sampFreq;
 }
 
  bool shakeTraj::UseVelocityInfo(){
-	 return false;
+	 return true;
  }

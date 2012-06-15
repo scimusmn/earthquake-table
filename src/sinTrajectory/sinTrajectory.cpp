@@ -1,4 +1,5 @@
 #include "sinTrajectory.h"
+#include "../eqConfig.h"
 
 //-- Init the starting variables for the sin Trajectory
 
@@ -16,6 +17,18 @@ sinTraj::sinTraj(){
 	pvts.reserve(numPoints+1);
 	//pts.reserve(numPoints+1);
 	amplPercent=1;
+	checkTime=0;
+	currentScale=1;
+}
+
+sinTraj::~sinTraj(){
+	//Finish();
+}
+
+void sinTraj::reset(){
+	aug=0;
+	totTime=0;
+	pFreq=freq;
 }
 
 // Define the function which the table calls once it has finished running (which happens when next segment returns 0 for the time)
@@ -23,6 +36,7 @@ sinTraj::sinTraj(){
 void sinTraj::Finish(){
 	bRunning=false;
 	pvts.clear();
+	//stopThread();
 	cout << "I quit!\n";
 }
 
@@ -42,13 +56,17 @@ const Error * sinTraj::NextSegment(uunit & pos, uunit & vel, uint8 & time){
 		time=dTime;
 		totTime+=dTime; // increment the current time
 		//set the amplitude according to the current frequency
-		double scale=amplPercent/(freq*1.6);
-		double amp=ampl*scale;
+		correctScale=amplPercent/(freq*1.6);
+		if(abs(currentScale-correctScale)>0.01){
+			int dir=(correctScale-currentScale)/abs(correctScale-currentScale);
+			currentScale+=dir*((dir>0)?.0025:.005);
+		}
+		double amp=ampl*currentScale;
 		double ind=float(totTime)/1000.; //derive an index position from the current run time
 		
 		//if the previous frequency doesn't equal the current freq
 		if(pFreq!=freq){
-			double ind2=ind;
+			double ind2=ind+dTime/1000.;
 			//change the augment value to line up the previous sin wave with the current
 			aug=2*M_PI*(freq-pFreq)*ind2+aug;
 			pFreq=freq; // set the previous freq to the current freq
@@ -56,6 +74,8 @@ const Error * sinTraj::NextSegment(uunit & pos, uunit & vel, uint8 & time){
 
 		ind*=2*M_PI*freq; // multiply the index time by 2*pi*freq
 		double sind=sin(ind-aug);
+		//double cosd=-cos(ind-aug);
+		//vel=cosd*amp;
 		pos=sind*amp;  // set teh position equal to the sin of the index minus the augmentation value
 		pt.set(pos,vel,time);
 
@@ -87,8 +107,16 @@ void sinTraj::draw(int _x, int _y, int _w, int _h)
 		ofLine(x+w-(w/seconds)*(ofGetElapsedTimef()-pts[i].x),pts[i].y,x+w-(w/seconds)*(ofGetElapsedTimef()-pts[i+1].x),pts[i+1].y);
 	}*/
 
+	ofSetLineWidth(2.0);
 	for(unsigned int i=0; i<pts.size()-1&&pts.size()>1; i++){
 		ofLine(pts[i].x,pts[i].y,pts[i+1].x,pts[i+1].y);
+	}
+	ofSetLineWidth(1);
+
+	if(pts.size()){
+		int i=0;
+		ofSetColor(red);
+		ofTriangle(pts[i].x+5,pts[i].y,pts[i].x+15,pts[i].y-10,pts[i].x+15,pts[i].y+10);
 	}
 	
 	//ofSetLineWidth(1);
@@ -100,24 +128,24 @@ void sinTraj::auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl)
 	double factor=double(h)/lbl.stringWidth("AMPLITUDE");
 	double stringW=factor*lbl.stringHeight("AMPLITUDE");
 	ofPushMatrix();
-	ofTranslate(x-stringW,y+h);
+	ofTranslate(x+10,y+h);
 	ofScale(factor,factor);
 	ofRotate(-90);
 	lbl.drawString("AMPLITUDE",0,0);
 	ofPopMatrix();
 	string perc=ofToString(int(amplPercent*100))+"%";
-	factor=double(w-stringW-20)/lbl.stringWidth(perc);
+	factor=double(w-(stringW+20))/lbl.stringWidth(perc);
 	lbl.setMode(OF_FONT_BOT);
 	ofPushMatrix();
 	int ampPos=(1-amplPercent*(.8)/(freq*1.6))*h*.5;
-	ofTranslate(x+stringW,y+ampPos-5);
+	ofTranslate(x+stringW+10,y+ampPos-5);
 	ofScale(factor,factor);
 	lbl.drawString(perc,0,0);
 	ofPopMatrix();
 	ofSetColor(blue);
 	ofSetLineWidth(2.);
-	ofLine(x+stringW,y+ampPos,x+w-3,y+ampPos);
-	ofLine(x+stringW,y+h-ampPos,x+w-3,y+h-ampPos);
+	ofLine(x+stringW+10,y+ampPos,x+w-3,y+ampPos);
+	ofLine(x+stringW+10,y+h-ampPos,x+w-3,y+h-ampPos);
 	ofSetLineWidth(2.);
 	lbl.setMode(OF_FONT_TOP);
 }
@@ -131,6 +159,7 @@ const Error * sinTraj::StartNew(){
 	aug=0;
 	printf("Starting trajectory");
 	bRunning=true;
+	startThread();
 	return 0;
 }
 
@@ -140,9 +169,9 @@ void sinTraj::setup(double minFrequency,double amplitude, double numSeconds){
 	seconds=numSeconds;
 	numDivs=seconds;
 	freq=pFreq=minFrequency;
-	dTime=4;
+	dTime=cfg().sampleTime;
 	ampl=amplitude;
-	sampleRate=10;
+	//sampleRate=10;
 	maxAmp=amplitude/(minFrequency*1.6);
 }
 
@@ -159,12 +188,34 @@ void sinTraj::changeDTime(int chngTme)
 	 return false;
  }
 
- double timeMove=0;
  double lastTime=0;
+
+ void sinTraj::threadedFunction()
+ {
+	 while(isRunning()){
+		if(checkTime<ofGetElapsedTimef()){
+			double secondPos=((ofGetElapsedTimeMillis()-startTime)%1000)/1000.;
+			double delay=.001;
+			double ti=(ofGetElapsedTimef()-(checkTime-delay));
+			checkTime=ofGetElapsedTimef()+delay;
+			double yPos=pt.pos/maxAmp*h/2+y+h/2;
+			//if(!index){
+			pts.push_front(ofPoint(x+w,yPos));
+			//}
+			while(pts.size()&&pts[pts.size()-1].x<x) pts.pop_back();
+			for(unsigned int i=0; i<pts.size(); i++){
+				//if(abs(pts[i].y-pts[i+1].y)>7) pts[i].y=(pts[i].y+pts[i+1].y)/2;
+				pts[i].x-=ti*(w/seconds);
+			}
+			tickPos-=ti*(w/seconds);
+			if(tickPos<=0) tickPos+=w/numDivs;
+		}
+	 }
+ }
 
 void sinTraj::update(){
 	if(isRunning()){
-		if(timeMove<ofGetElapsedTimef()){
+		/*if(timeMove<ofGetElapsedTimef()){
 			double secondPos=((ofGetElapsedTimeMillis()-startTime)%1000)/1000.;
 			double delay=.005;
 			double ti=(ofGetElapsedTimef()-(timeMove-delay));
@@ -182,7 +233,7 @@ void sinTraj::update(){
 			if(tickPos<=0) tickPos+=w/numDivs;
 			//index++;
 			//if(index==4) index=0;
-		}
+		}*/
 		/*if(timeMove<ofGetElapsedTimef()){
 			timeMove=ofGetElapsedTimef()+1/sampleRate;
 			wave.push_front(waveform(amplPercent,ofGetElapsedTimef(),freq,aug));

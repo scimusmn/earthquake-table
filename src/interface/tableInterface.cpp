@@ -1,4 +1,6 @@
 #include "tableInterface.h"
+#include "../eqConfig.h"
+#include "../../../dallasEng/dallasEng.h"
 
 //--------------------- instruction box -----------
 
@@ -10,26 +12,47 @@ extern ofColor blue;
 extern ofColor orange;
 extern ofColor red;
 
+extern string MAIN_TITLE;
+
+instructionBox inst;
+
 void instructionBox::setup(string folder)
 {
-	rodInst.loadImage("images/"+folder+"/rods.jpg");
-	buildInst.loadImage("images/"+folder+"/build.jpg");
+	o_rodInst.loadImage("images/"+folder+"/oRods.jpg");
+	o_buildInst.loadImage("images/"+folder+"/oBuild.jpg");
+	q_rodInst.loadImage("images/"+folder+"/qRods.jpg");
+	q_buildInst.loadImage("images/"+folder+"/qBuild.jpg");
 	rodSel.setup(300,300,"images/"+folder+"/rodBut.jpg");
 	buildSel.setup(300,300,"images/"+folder+"/buildBut.jpg");
-	resetBut.setup("Return to experiment selection","fonts/Arial.ttf",15);
-	resetBut.arial.setMode(OF_FONT_TOP);
+	resetBut.setup("Return to experiment selection",15);
 }
 	
 void instructionBox::draw(int x, int y, int w, int h)
 {
-	if(!rodSel.pressed()&&!buildSel.pressed()){
-		rodSel.draw(x,y+(h-rodSel.h)/2);
-		buildSel.draw(x+w-buildSel.w,y+(h-buildSel.h)/2);
-	}
-	else{
+	if(!rodSel.pressed()&&!buildSel.pressed()&&mode==TABLE_SELECT){
+		ofSetColor(white*.1);
+		ofRect(x,y,w,h);
+		ofSetColor(gray);
+		drawHatching(x,y,w,h,50,50);
+		ofSetColor(yellow);
+		header().setMode(OF_FONT_CENTER);
+		header("Choose your structure type",x+w/2,y+h/4);
+		header().setMode(OF_FONT_LEFT);
 		ofSetColor(white);
-		if(buildSel.pressed()) buildInst.draw(x,y,w,h);
-		if(rodSel.pressed()) rodInst.draw(x,y,w,h);
+		rodSel.draw(x+w/3-rodSel.w/2,y+(h-rodSel.h)/2);
+		buildSel.draw(x+2*w/3-buildSel.w/2,y+(h-buildSel.h)/2);
+	}
+	else if(mode==TABLE_OSC){
+		ofSetColor(white);
+		if(buildSel.pressed()) o_buildInst.draw(x,y,w,h);
+		if(rodSel.pressed()) o_rodInst.draw(x,y,w,h);
+		ofSetColor(yellow);
+		resetBut.draw(x+w-resetBut.w-20,y+h-resetBut.h-20);
+	}
+	else if(mode==TABLE_QUAKE){
+		ofSetColor(white);
+		if(buildSel.pressed()) q_buildInst.draw(x,y,w,h);
+		if(rodSel.pressed()) q_rodInst.draw(x,y,w,h);
 		ofSetColor(yellow);
 		resetBut.draw(x+w-resetBut.w-20,y+h-resetBut.h-20);
 	}
@@ -44,9 +67,10 @@ bool instructionBox::clickDown(int x, int y)
 {
 	bool ret=0;
 	if(!rodSel.pressed()&&!buildSel.pressed()){
-		ret=1;
-		rodSel.clickDown(x,y);
-		buildSel.clickDown(x,y);
+		if(rodSel.clickDown(x,y)||buildSel.clickDown(x,y))
+			mode=TABLE_OSC;
+		if(rodSel.pressed()) MAIN_TITLE="See how rods respond to vibration";
+		if(buildSel.pressed()) MAIN_TITLE="See how buildings respond to vibration";
 	}
 	else if(resetBut.clickDown(x,y)){
 		ret=1;
@@ -64,6 +88,9 @@ void instructionBox::reset()
 {
 	rodSel.setPressed(false);
 	buildSel.setPressed(false);
+	mode=TABLE_SELECT;
+	table().stopTable();
+	MAIN_TITLE="See how your structure responds to motion";
 }
 
 int instructionBox::getState()
@@ -76,12 +103,18 @@ int instructionBox::getState()
 
 //-_-_-_-_-_-_-_-_-_-_ Draw function fo the white box around each group -_-_-_-_-_-_-_-_-_-_
 
-void drawGroupBox(int x, int y, int w, int h, string title,ofFont & label)
+int drawGroupBox(int x, int y, int w, int h, string title)
 {
 	ofColor k=ofGetStyle().color;
 
-	int strWid=label.stringHeight(title)*1.5;
+	int ret;
+
+	int strWid=ret=header().stringHeight(title)*1.5;
 	 
+	ofSetColor(gray);
+	ofRect(x+strWid,y,w-strWid,h);
+	ofSetColor(white*.1);
+	drawHatching(x+strWid,y,w-strWid,h,15,1);
 
 	//------- white border box;
 	ofNoFill();
@@ -101,19 +134,21 @@ void drawGroupBox(int x, int y, int w, int h, string title,ofFont & label)
 	//------- rotated label for group
 	ofSetColor(yellow.opacity(k.a/255.));
 	ofPushMatrix();
-	ofTranslate(x+strWid/8,y+h-20);
+	ofTranslate(x+strWid/4,y+h-20);
 	ofRotate(-90);
-	label.drawString(title,0,0);
+	header().drawString(title,0,0);
 	ofPopMatrix();
+
+	return ret;
 }
 
 //_-_-_-_-_-_-_-_-_-_-_ manual controls -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 
-void drawSlideGroup(int x, int y, int w, int h,string label, slidePack & t, ofFont & fnt){
+void drawSlideGroup(int x, int y, int w, int h,string lbl, slidePack & t){
 
 	//-_-_-_-_-_ draw title -_-_-_-_-_-_
 	ofSetColor(white);
-	fnt.drawString(label,x+w/2,t.disp.y-40);
+	label(lbl,x+w/2,t.disp.y-40);
 	ofSetColor(black);
 	ofPushStyle();
 	ofSetLineWidth(2);
@@ -122,7 +157,7 @@ void drawSlideGroup(int x, int y, int w, int h,string label, slidePack & t, ofFo
 
 	//-_-_-_-_-_ slider draw -_-_-_-_-_-_
 	ofSetColor(blue);
-	t.sld.draw(x+(w-t.sld.w)/2-100,y,400,15);
+	t.sld.draw(x+(w-t.sld.w)/2-100,y,t.sld.w,15);
 
 	//-_-_-_-_-_ button draw -_-_-_-_-_-_
 	ofSetColor(white);
@@ -130,39 +165,45 @@ void drawSlideGroup(int x, int y, int w, int h,string label, slidePack & t, ofFo
 	t.up.draw(t.sld.x+t.sld.w+30,t.sld.y+(t.sld.h-t.up.h)/2);
 }
 
-void drawDisp(slidePack & t,string contents,string add, ofFont & fnt){
-	ofRoundShadow(t.disp.x-10,t.disp.y-10,t.disp.w+20,t.disp.h+20,5,1);
+void drawDisp(slidePack & t,string contents,string add){
+	//ofRoundShadow(t.disp.x-10,t.disp.y-10,t.disp.w+20,t.disp.h+20,5,1);
+	ofSetShadowDarkness(1);
+	ofShadowRounded(t.disp.x-5,t.disp.y-5,t.disp.w+10,t.disp.h+10,5,5);
+	ofSetShadowDarkness(.3);
 	ofSetColor(blue);
 	t.disp.draw(contents,t.up.x+t.up.w+20,t.sld.y+(t.sld.h-t.disp.h)/2);
 
 	//-_-_-_-_-_ draw addendum -_-_-_-_-_-_
-	fnt.setSize(25);
-	fnt.drawString(add,t.disp.x+t.disp.w+30,t.disp.y+t.disp.h);
-	fnt.setSize(15);
+	label().setSize(25);
+	label(add,t.disp.x+t.disp.w+30,t.disp.y+t.disp.h);
+	label().setSize(15);
 }
 
-void manualMode::setup(motionTable * tbl,ofFont * fnt1, ofFont * fnt2)
+void manualMode::setup()
 {
 	amp.setup();
 	freq.setup();
 	sinWave.setup(.5,10000,5);
 	prevFreqPerc=0;
 	prevAmpPerc=1;
-	fnt=fnt1;
-	lblFnt=fnt2;
-	table=tbl;
 
-	sine.setup(&sinWave);
-	amp.sld.w=400;
+	start.setup("Start oscillations",25);
+	slideWidth=300;
+	amp.sld.w=slideWidth;
+	freq.sld.w=slideWidth;
 	amp.sld.setPercent(sinWave.amplPercent);
-	inst.setup("manual");
 }
 	
 void manualMode::draw(int x, int y, int w, int h)
 {
-	lblFnt->setSize(24);
-	double sideLabelW=lblFnt->stringHeight("Kjg")*1.5;
-	double boxW=w-sideLabelW;
+	//-_-_-_-_-_ draw box around group -_-_-_-_-_-_
+	ofSetColor(white);
+	drawGroupBox(x,y,w,h,"MANUAL CONTROL");
+
+	header().setSize(24);
+	double sideLabelW=header().stringHeight("Kjg")*1.5;
+	ofRectangle controls;
+	controls.width=w-sideLabelW;
 	double boxX=x+sideLabelW;
 
 	//ofSetColor(64,128,200);
@@ -171,45 +212,41 @@ void manualMode::draw(int x, int y, int w, int h)
 
 	//-_-_-_-_-_ draw transparent black bg -_-_-_-_-_-_
 	ofSetColor(black.opacity(.25));
-	ofRect(ctrlPt.x+10,ctrlPt.y,boxW-20,h-150);
+	ofRect(ctrlPt.x+10,ctrlPt.y,controls.width-20,h-150);
 	ofPushStyle();
 	ofNoFill();
 	ofSetColor(black);
 	ofSetLineWidth(2);
-	ofRect(ctrlPt.x+10,ctrlPt.y,boxW-20,h-150);
+	ofRect(ctrlPt.x+10,ctrlPt.y,controls.width-20,h-150);
 	ofPopStyle();
 
 	ofSetColor(yellow);
-	sine.draw(ctrlPt.x+(boxW-sine.w)/2,ctrlPt.y+25);
+	start.draw(ctrlPt.x+(controls.width-start.w)/2,ctrlPt.y+25);
 
 	//-_-_-_-_-_ draw headline -_-_-_-_-_-_
-	string title="FIND THE RESONANCE\n OF YOUR BUILDING";
+	string title="FIND THE RESONANCE\nOF YOUR STRUCTURE";
 	ofSetColor(yellow);
-	lblFnt->setSize(24);
-	int wid=lblFnt->stringWidth(title);
-	lblFnt->drawString(title,x+sideLabelW+10,y+10);
-	lblFnt->setSize(30);
+	header().setSize(24);
+	int wid=header().stringWidth(title);
+	header(title,x+sideLabelW+10,y+10);
+	header().setSize(30);
 
 	//-_-_-_-_-_ draw black line under headline -_-_-_-_-_-_
 	ofSetColor(black);
 	ofSetLineWidth(2.0);
-	ofLine(x+sideLabelW+10,y+10+lblFnt->stringHeight(title),x+w-10,y+10+lblFnt->stringHeight(title));
+	ofLine(x+sideLabelW+10,y+10+header().stringHeight(title),x+w-10,y+10+header().stringHeight(title));
 	ofSetLineWidth(1.0);
 
 	//-_-_-_-_-_ draw frequency slider -_-_-_-_-_-_
 	string freqLabel="Frequency slider";
 	int nFreq=sinWave.freq;
-	drawDisp(freq,ssprintf("%02i.%i",nFreq,int((sinWave.freq+.05)*10-nFreq*10)),"hz",*fnt);
-	drawSlideGroup(ctrlPt.x,ctrlPt.y+175,boxW,h,freqLabel,freq,*fnt);
+	drawDisp(freq,ssprintf("%02i.%i",nFreq,int((sinWave.freq+.05)*10-nFreq*10)),"hz");
+	drawSlideGroup(ctrlPt.x,ctrlPt.y+175,controls.width,h,freqLabel,freq);
 
 	//-_-_-_-_-_ draw amplitude slider -_-_-_-_-_-_
 	string ampLabel="Amplitude slider";
-	drawDisp(amp,ssprintf("%03i",int((sinWave.amplPercent)*100)),"%",*fnt);
-	drawSlideGroup(ctrlPt.x,ctrlPt.y+350,boxW,h,ampLabel,amp,*fnt);
-
-	//-_-_-_-_-_ draw box around group -_-_-_-_-_-_
-	ofSetColor(white);
-	drawGroupBox(x,y,w,h,"MANUAL CONTROL",*lblFnt);
+	drawDisp(amp,ssprintf("%03i",int((sinWave.amplPercent)*100)),"%");
+	drawSlideGroup(ctrlPt.x,ctrlPt.y+350,controls.width,h,ampLabel,amp);
 
 	//sinWave.auxilliaryDraw(100,100,100,200,*lblFnt);
 }
@@ -220,19 +257,18 @@ void manualMode::update()
 }
 
 void averageSliderMotion(double & prev, ofSlider & sld){
-	if(sld.pressed()&&abs(prev-sld.getPercent())>.1)
-			sld.setPercent((9*prev+sld.getPercent())/10);
+	if(sld.pressed()&&abs(prev-sld.getPercent())>.01)
+			sld.setPercent((.98*prev+.02*sld.getPercent()));
 	prev=sld.getPercent();
 }
 
 bool manualMode::clickDown(int x, int y)
 {
 	bool ret=0;
-	if(sine.over(x,y)){
-		if(!(sine.sine->isRunning()))
-			ret=true,table->handleTrajectory(*sine.sine);
-		else table->stopTable();
-		sine.setPressed(true);
+	if(start.toggle(x,y)){
+		if(!(sinWave.isRunning()))
+			ret=true;
+		else table().stopTable(),start.setTitle("Start oscillations");
 	}
 	else if(freq.sld.clickDown(x,y)||freq.up.clickDown(x,y)||freq.dn.clickDown(x,y)){
 		ret=true;
@@ -253,10 +289,11 @@ bool manualMode::clickDown(int x, int y)
 		sinWave.amplPercent=.1+.9*amp.sld.getPercent();
 	}
 	
-	if(ret&&!(sine.sine->isRunning())){
-		table->handleTrajectory(*sine.sine);
+	if(ret&&!(sinWave.isRunning())){
+		table().handleTrajectory(sinWave);
+		start.setTitle("Stop oscillations");
 	}
-	inst.clickDown(x,y);
+	if(inst.clickDown(x,y)) reset();
 	return ret;
 }
 
@@ -265,7 +302,7 @@ bool manualMode::clickUp()
 	bool ret=0;
 	amp.clickUp();
 	freq.clickUp();
-	sine.clickUp();
+	start.clickUp();
 	inst.clickUp();
 	return ret;
 }
@@ -273,11 +310,13 @@ bool manualMode::clickUp()
 bool manualMode::drag(int x, int y)
 {
 	bool ret=0;
-	if(freq.sld.dragB(x,y)){
+	freq.sld.drag(x,y);
+	if(freq.sld.pressed()){
 		averageSliderMotion(prevFreqPerc,freq.sld);
 		sinWave.freq=pow(2,freq.sld.getPercent()*(5)-1);
 	}
-	if(amp.sld.dragB(x,y)){
+	amp.sld.drag(x,y);
+	if(amp.sld.pressed()){
 		averageSliderMotion(prevAmpPerc,amp.sld);
 		sinWave.amplPercent=.1+.9*amp.sld.getPercent();
 	}
@@ -286,18 +325,21 @@ bool manualMode::drag(int x, int y)
 
 void manualMode::reset()
 {
-
+	table().stopTable(),start.setTitle("Start oscillations");
+	freq.sld.setPercent(0),amp.sld.setPercent(100);
+	sinWave.reset();
+	sinWave.freq=pow(2,freq.sld.getPercent()*(5)-1);
+	sinWave.amplPercent=.1+.9*amp.sld.getPercent();
+	prevFreqPerc=freq.sld.getPercent();
+	prevAmpPerc=freq.sld.getPercent();
 }
 
 //_-_-_-_-_-_-_-_-_-_-_ automated earthquake controls -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 
-void autoMode::setup(motionTable * tbl,ofFont * fnt1, ofFont * fnt2)
+void autoMode::setup()
 {
-	fnt=fnt1;
-	lblFnt=fnt2;
-	table=tbl;
-
-	int numAcc=DIR.listDir("accelerogram/");
+	cout << cfg().eqDir << endl;
+	int numAcc=DIR.listDir(cfg().eqDir);
 	double maxNet=0;
 	for(int i=0; i<numAcc; i++){
 		shakes.push_back(shakeTraj());
@@ -305,37 +347,35 @@ void autoMode::setup(motionTable * tbl,ofFont * fnt1, ofFont * fnt2)
 		maxNet=max(shakes[i].maxNet,maxNet);
 	}
 	for(unsigned int i=0; i<shakes.size(); i++){
-		shakes[i].updateMaxNet(maxNet);
+		if(cfg().scaleToAll) shakes[i].updateMaxNet(maxNet);
 	}
 
 	buttons.setup(&shakes);
-
-	inst.setup("quakes");
 }
 	
 void autoMode::draw(int x, int y, int w, int h)
 {
+	//-_-_-_-_-_-_-_-_ draw box -_-_-_-_-_-_-_-_-_-_-_-_
+	ofSetColor(white);
+	int off=drawGroupBox(x,y,w,h,"EARTHQUAKES");
+
 	//-_-_-_-_-_-_-_-_ draw headline -_-_-_-_-_-_-_-_-_-_-_-_
 	string title="SELECT AN EARTHQUAKE\nTO TEST YOUR STRUCTURE";
 	ofSetColor(yellow);
-	lblFnt->setSize(24);
-	int wid=lblFnt->stringWidth(title);
-	lblFnt->drawString(title,x+lblFnt->stringHeight("Kjg")*1.5+10,y+10);
-	lblFnt->setSize(30);
+	header().setSize(24);
+	int wid=header().stringWidth(title);
+	header(title,x+header().stringHeight("Kjg")*1.5+10,y+10);
+	header().setSize(30);
 
 	//-_-_-_-_-_-_-_-_ draw black line under headline -_-_-_-_-_-_-_-_-_-_-_-_
 	ofSetColor(black);
 	ofSetLineWidth(2.0);
-	ofLine(x+lblFnt->stringHeight("Kjg")*1.5+10,y+10+lblFnt->stringHeight(title),x+w-10,y+10+lblFnt->stringHeight(title));
+	ofLine(x+header().stringHeight("Kjg")*1.5+10,y+10+header().stringHeight(title),x+w-10,y+10+header().stringHeight(title));
 	ofSetLineWidth(1.0);
 
 	//_-_-_-_-_-_-_-_-_ draw buttons -_-_-_-_-_-_-_-_
 	ofSetColor(white);
-	buttons.draw(x+w-buttons.w,y+h-(buttons.h+200),w,h);
-
-	//-_-_-_-_-_-_-_-_ draw box -_-_-_-_-_-_-_-_-_-_-_-_
-	ofSetColor(white);
-	drawGroupBox(x,y,w,h,"EARTHQUAKES",*lblFnt);
+	buttons.draw(x+off+2,y+(h-(buttons.h))/2,w-off-4,h);
 }
 	
 void autoMode::update()
@@ -348,7 +388,7 @@ bool autoMode::clickDown(int x, int y)
 	bool ret=0;
 	if(buttons.clickDown(x,y)){
 		ret=true;
-		table->handleTrajectory(*(buttons.lastPressed().shake));
+		table().handleTrajectory(*(buttons.lastPressed().shake));
 	}
 	inst.clickDown(x,y);
 	return ret;
@@ -385,143 +425,171 @@ tableInterface::~tableInterface()
 
 }
 
-void tableInterface::setup(motionTable * tbl)
+void tableInterface::setup()
 {
-	table=tbl;
 
-	qSelect.setup("TRY AN EARTHQUAKE","fonts/DinC.ttf",30);
-	qSelect.arial.setMode(OF_FONT_TOP);
+	qSelect.setup("TRY AN EARTHQUAKE",30);
 
-	oSelect.setup("NEW USER?","fonts/DinC.ttf",50);
-	oSelect.arial.setMode(OF_FONT_TOP);
+	oSelect.setup("NEW USER?",30);
 
-	label.loadFont("fonts/DinC.ttf");
-	label.setSize(30);
-	label.setMode(OF_FONT_TOP);
+	header().loadFont("fonts/DinC.ttf");
+	header().setSize(30);
+	header().setMode(OF_FONT_TOP);
 	
 
-	subtext.loadFont("fonts/Arial.ttf");
-	subtext.setSize(15);
-	subtext.setMode(OF_FONT_BOT);
-	subtext.setMode(OF_FONT_CENTER);
+	label().loadFont("fonts/Arial.ttf");
+	label().setSize(15);
+	label().setMode(OF_FONT_BOT);
+	label().setMode(OF_FONT_CENTER);
 
 	homeTimer.set(1);
 	homeTimer.pause();
 
 	oSelect.setPressed(true);
 
-	man.setup(table,&subtext,&label);
-	quake.setup(table,&subtext,&label);
+	man.setup();
+	quake.setup();
+	inst.setup("instructions");
 }
 	
-void tableInterface::draw(int x, int y)
+void tableInterface::draw(int _x, int _y)
 {
-	int boxOff=100;
-	int h=ofGetHeight()-(y-60)*2;
-	int w=ofGetWidth()-(x-60)*2;
-	int boxW=ofGetWidth()-x*2-boxOff;
-	int boxH=x*2;
+	ofPoint pad(30,0);
+	ofPoint margin(100,40);
+	x=_x,y=_y;
+	h=ofGetHeight()-(y+pad.y*2);
+	w=ofGetWidth()-(x+pad.x*2);
+	
+	ofRectangle graph;
+	graph.x=x+pad.x+margin.x;
+	graph.y=y+pad.y+margin.y;
+	graph.width=ofGetWidth()-graph.x*2;
+	graph.height=200;
 
-	//-_-_-_-_- draw the rounded background -_-_-_-_-
+	ofRectangle controls;
+	controls.y=graph.y+graph.height+margin.y;
+	controls.x=x+pad.x+margin.x/2;
+	controls.width=ofGetWidth()/2-controls.x-margin.x/2;
+	controls.height=ofGetHeight()-controls.y-margin.y;
+
+	//-_-_-_-_- shaded rect over the background -_-_-_-_-
 	ofSetColor(gray.opacity(.75));
-	ofRoundShape(x-60,y-60,w,h,20,true);
+	ofRect(x+pad.x,y+pad.y,w,h);
 	ofSetColor(black);
 	ofSetLineWidth(2.0);
-	ofRoundShape(x-60,y-60,w,h,20,false);
+	ofNoFill();
+	ofRect(x+pad.x,y+pad.y,w,h);
+	ofFill();
 	ofSetLineWidth(1.0);
 
 	//--------  Background of the graph area
-	ofSetColor(black+150);
-	ofRect(x-10+boxOff,y-10,boxW+20,boxH+20);
+	ofSetColor(white*.5);
+	ofRect(graph.x-10,graph.y-10,graph.width+20,graph.height+20);
 	ofSetColor(black);
-	ofRect(x-2+boxOff,y-2,boxW+4,boxH+4);
-	ofSetColor(white);
-	ofRect(x+boxOff,y,boxW,boxH);
+	ofRect(graph.x-2,graph.y-2,graph.width+4,graph.height+4);
+	ofSetColor(white*.8);
+	ofRect(graph.x,graph.y,graph.width,graph.height);
 
 
 	//-_-_-_-_-_-_-_-_- draw the running trajectory -_-_-_-_-_-_-_-_-
-	if(table->isRunning()){
-		table->runningTrajectory().auxilliaryDraw(x,y,boxOff,boxH,label);
-		table->runningTrajectory().draw(x+boxOff,y,boxW,boxH);
+	if(table().isRunning()){
+		table().runningTrajectory().auxilliaryDraw(graph.x-margin.x,graph.y,margin.x,graph.height,header()); //(start pos for the text x, y, width for aux, height of graph)
+		table().runningTrajectory().draw(graph.x,graph.y,graph.width,graph.height);
+	}
+	else if(cfg().noTable&&qSelect.pressed()){
+		quake.buttons.lastPressed().shake->draw(graph.x,graph.y,graph.width,graph.height);
+	}
+	else{
+		ofSetColor(gray);
+		pushHeaderStyle(40,OF_FONT_CENTER);
+		if(qSelect.pressed()) header("Select an earthquake below",graph.x+graph.width/2,graph.y+graph.height/2);
+		else if(oSelect.pressed()) header("Control the table motion with the sliders below",graph.x+graph.width/2,graph.y+graph.height/2);
+		popHeaderStyle();
 	}
 
 	//-_-_-_-_- shade over the traj -_-_-_-_-
-	ofShade(x+boxOff,y,20,boxH,OF_RIGHT,.7);
-	ofShade(ofGetWidth()-x,y,20,boxH,OF_LEFT,.7);
+	ofShade(x+pad.x+margin.x,y+pad.y+margin.y,20,graph.height,OF_RIGHT);
+	ofShade(ofGetWidth()-(x+pad.x+margin.x),y+pad.y+margin.y,20,graph.height,OF_LEFT);
 
 	//-_-_-_-_- if we have the quakes selected, draw the oscillation select and quake options -_-_-_-_-
-	if(qSelect.pressed()){
+	if(qSelect.pressed()&&inst.getState()){
 		ofSetColor(yellow);
-		oSelect.draw((ofGetWidth()-oSelect.w)/2,y+h-(oSelect.h*1.75+50));
-		quake.draw(x-40,y+boxH+50,(boxW+boxOff)/2,h-(boxH+250));
-		quake.inst.draw(ofGetWidth()/2+40,y+boxH+50,(boxW+boxOff)/2,h-(boxH+250));
+		oSelect.draw(ofGetWidth()/2+margin.x/2+(controls.width-oSelect.w)/2,y+h-(oSelect.h+50));
+		quake.draw(controls.x,controls.y,controls.width,controls.height);
+		inst.draw(ofGetWidth()/2+margin.x/2,controls.y,controls.width,controls.height-100);
 	}
 
 	//-_-_-_-_- if we have the manual mode selected, draw the quake select button and manual controls -_-_-_-_-
-	if(oSelect.pressed()){
+	if(oSelect.pressed()&&inst.getState()){
 		ofSetColor(yellow);
-		if(man.inst.getState()){
-			label.setSize(24);
-			label.setMode(OF_FONT_BOT);
-			label.drawString("Or",qSelect.x-label.stringWidth("Or")-20, qSelect.y+qSelect.h-10);
-			label.setMode(OF_FONT_TOP);
-			label.setSize(30);
-			qSelect.draw(ofGetWidth()/2+40+(boxW/2-qSelect.w)/2,y+h-(qSelect.h*2+50));
+		if(inst.getState()){
+			header().setSize(24);
+			header().setMode(OF_FONT_BOT);
+			header().drawString("Or",qSelect.x-header().stringWidth("Or")-20, qSelect.y+qSelect.h-10);
+			header().setMode(OF_FONT_TOP);
+			header().setSize(30);
+			qSelect.draw(ofGetWidth()/2+margin.x/2+(controls.width-qSelect.w)/2,y+h-(qSelect.h+50));
 		}
-		man.draw(x-40,y+boxH+50,(boxOff+boxW)/2,h-(boxH+250));
-		man.inst.draw(ofGetWidth()/2+40,y+boxH+50,(boxW+boxOff)/2,h-(boxH+250));
+		man.draw(controls.x,controls.y,controls.width,controls.height);
+		inst.draw(ofGetWidth()/2+margin.x/2,controls.y,controls.width,controls.height-100);
 	}
 
-	//-_-_-_-_- if the table is homing, gray out everything -_-_-_-_-
-	if(table->isHoming()){
-		ofSetColor(black.opacity(.75));
-		ofRect(0,0,ofGetWidth(),ofGetHeight());
-		ofSetColor(white);
-		homing.draw(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/4);
-		label.setMode(OF_FONT_CENTER);
-		label.setSize(70);
-		ofSetColor(white);
-		label.drawString("Centering table, please wait",ofGetWidth()/2,ofGetHeight()/8);
-		label.setSize(30);
-		label.setMode(OF_FONT_LEFT);
-	}
+	if(inst.mode==TABLE_SELECT)
+		inst.draw(0,_y,ofGetWidth(),ofGetHeight()-_y);
 }
 
 void tableInterface::update()
 {
 	man.update();
-	if(table->justStopped()){
+	if(table().justStopped()){
 	}
 	if(homeTimer.getPercent()>.5&&homeTimer.getPercent()<.6){
-		//table->home();
+		table().home();
 	}
-	table->update();
+	if(resetTimer.justExpired()){
+		qSelect.setPressed(false);
+		oSelect.setPressed(true);
+		table().stopTable();
+		man.reset();
+		inst.reset();
+	}
+	table().update();
 }
 
 bool tableInterface::clickDown(int _x, int _y)
 {
 	bool ret=0;
-	if(!table->isHoming()){
+	if(!table().isHoming()){
 		if(!oSelect.pressed()){
+			resetTimer.set(cfg().timeout);
+			resetTimer.run();
 			if(oSelect.clickDown(_x,_y)){
 				ret=true;
-				table->home();
-				man.inst.reset();
+				if(!cfg().noTable)
+					table().home();
+				inst.reset();
+				inst.mode=TABLE_SELECT;
 				qSelect.setPressed(false);
+				man.reset();
 			}
 			ret=quake.clickDown(_x,_y);
 		}
 		if(!ret&&!qSelect.pressed()){
-			if(man.inst.getState()&&qSelect.clickDown(_x,_y)){
-				table->home();
+			resetTimer.set(cfg().timeout);
+			resetTimer.run();
+			if(inst.getState()&&qSelect.clickDown(_x,_y)){
+				if(!cfg().noTable)
+					table().home();
 				oSelect.setPressed(false);
+				inst.mode=TABLE_QUAKE;
+				man.reset();
 			}
 			ret=man.clickDown(_x,_y);
 		}
 		if(stop.clickDown(_x,_y)){
-			table->stopTable();
+			table().stopTable();
 			ofGetAppPtr()->draw();
-			table->home();
+			table().home();
 		}
 	}
 	return ret;

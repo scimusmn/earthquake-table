@@ -58,9 +58,15 @@ protected:
 	double sampleRate;
 	double numDivs;
 	double x,y,w,h;
+
+	double checkTime;
+
+	double currentScale;
+	double correctScale;
 public:
 	long dTime;
 	sinTraj();
+	~sinTraj();
 	double freq,pFreq, ampl, aug,amplPercent;
 	void Finish();
 	const Error * NextSegment(uunit & pos, uunit & vel, uint8 & time);
@@ -70,5 +76,7 @@ public:
 	void auxilliaryDraw(int x, int y, int w, int h,ofFont & lbl);
 	void update();
 	void changeDTime(int chngTme);
-	 bool UseVelocityInfo();
+	bool UseVelocityInfo();
+	void threadedFunction();
+	void reset();
 };

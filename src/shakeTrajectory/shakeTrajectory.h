@@ -18,6 +18,7 @@ class shakeTraj : public tableTraj{
 public:
 	double maxNet;
 	string location, date, magnitude;
+	double samplesPerSecond;
 	shakeTraj();
 	void Finish();
 	const Error * NextSegment(uunit & pos, uunit & vel, uint8 & time);
